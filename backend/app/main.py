@@ -40,6 +40,11 @@ app.include_router(simulation_router)
 app.include_router(ws_router)
 
 
+@app.get("/")
+async def root():
+    return {"status": "ok", "service": "HFT Trading Bot API"}
+
+
 @app.get("/api/health")
 async def health():
     return {"status": "ok"}
