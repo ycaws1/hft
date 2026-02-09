@@ -14,7 +14,7 @@ class Settings(BaseSettings):
 
         Supports: "*", "https://a.com", "https://a.com,https://b.com"
         """
-        return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
+        return [o.strip().rstrip("/") for o in self.cors_origins.split(",") if o.strip()]
 
 
 settings = Settings()

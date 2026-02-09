@@ -17,6 +17,13 @@ from app.db.engine import async_session
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Auto-create tables if they don't exist
+    from app.db.base import Base
+    from app.db.engine import engine
+    from app.models import db_models  # noqa: F401 - registers models
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
     yahoo = YahooFinanceProvider()
     cached = CachedDataProvider(yahoo, async_session)
     registry.register(cached, default=True)
