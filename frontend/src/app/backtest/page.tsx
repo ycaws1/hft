@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import ConfigurationCard from '@/components/ConfigurationCard';
 import BacktestResults from '@/components/BacktestResults';
-import BacktestChart from '@/components/BacktestChart';
+const BacktestChart = dynamic(() => import('@/components/BacktestChart'), { ssr: false });
 import TradeLog from '@/components/TradeLog';
 import { useBacktestStore } from '@/stores/backtestStore';
 import { apiFetch } from '@/lib/api';

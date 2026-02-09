@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import dynamic from 'next/dynamic';
 import BacktestResults from '@/components/BacktestResults';
-import BacktestChart from '@/components/BacktestChart';
+const BacktestChart = dynamic(() => import('@/components/BacktestChart'), { ssr: false });
 import TradeLog from '@/components/TradeLog';
 import { apiFetch } from '@/lib/api';
 import type { BacktestMetrics, EquityCurvePoint, Trade } from '@/lib/types';
