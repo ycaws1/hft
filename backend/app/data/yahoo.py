@@ -66,17 +66,37 @@ class YahooFinanceProvider(DataProvider):
 
     @staticmethod
     def _search(query: str) -> list[StockSearchResult]:
+        # Try yf.Search first
         try:
             results = yf.Search(query)
-            out = []
-            for q in results.quotes[:10]:
-                out.append(
-                    StockSearchResult(
-                        symbol=q.get("symbol", ""),
-                        name=q.get("shortname", q.get("longname", "")),
-                        exchange=q.get("exchange", ""),
+            if results.quotes:
+                out = []
+                for q in results.quotes[:10]:
+                    out.append(
+                        StockSearchResult(
+                            symbol=q.get("symbol", ""),
+                            name=q.get("shortname", q.get("longname", "")),
+                            exchange=q.get("exchange", ""),
+                        )
                     )
-                )
-            return out
+                if out:
+                    return out
         except Exception:
-            return []
+            pass
+
+        # Fallback: treat query as a ticker symbol and validate via yf.Ticker
+        try:
+            ticker = yf.Ticker(query.upper())
+            info = ticker.info
+            if info and info.get("quoteType"):
+                return [
+                    StockSearchResult(
+                        symbol=query.upper(),
+                        name=info.get("shortName", info.get("longName", query.upper())),
+                        exchange=info.get("exchange", ""),
+                    )
+                ]
+        except Exception:
+            pass
+
+        return []

@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 import type { BacktestResult, StrategyInfo, StrategyParam } from '@/lib/types';
 
+const today = new Date();
+const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+const fmt = (d: Date) => d.toISOString().slice(0, 10);
+
 interface BacktestState {
   // Config
   selectedSymbols: string[];
@@ -39,7 +43,7 @@ export const useBacktestStore = create<BacktestState>((set) => ({
   selectedSymbols: [],
   strategyName: '',
   strategyParams: {},
-  dateRange: { start: '2023-01-01', end: '2024-01-01' },
+  dateRange: { start: fmt(thirtyDaysAgo), end: fmt(today) },
   interval: '1d',
   initialCash: 100000,
   tradingFeePct: 1.0,

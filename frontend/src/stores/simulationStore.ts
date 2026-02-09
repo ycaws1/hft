@@ -38,12 +38,16 @@ interface SimulationState {
   reset: () => void;
 }
 
+const today = new Date();
+const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+const fmt = (d: Date) => d.toISOString().slice(0, 10);
+
 const initialState = {
   selectedSymbols: [],
   strategyName: '',
   strategyParams: {},
   simMode: 'replay' as const,
-  dateRange: { start: '2023-01-01', end: '2024-01-01' },
+  dateRange: { start: fmt(thirtyDaysAgo), end: fmt(today) },
   interval: '1d',
   initialCash: 100000,
   tradingFeePct: 1.0,
